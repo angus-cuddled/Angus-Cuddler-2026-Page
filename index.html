@@ -1,0 +1,931 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Angus Cuddlers in the Mountains</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&display=swap');
+
+  :root{
+    --parchment:#f4ead3;
+    --parchment-deep:#ecddbd;
+    --card:#fbf5e6;
+    --card-edge:#e3d2ad;
+    --ink:#43352a;
+    --ink-soft:#6a5746;
+    --brown:#6b4c33;
+    --forest:#41573f;
+    --forest-soft:#5d7355;
+    --terracotta:#b85f3c;
+    --terracotta-deep:#9d4e30;
+    --gold:#cda24a;
+    --berry:#8c3a3a;
+    --shadow:0 6px 22px rgba(67,53,42,.12);
+    --shadow-soft:0 2px 10px rgba(67,53,42,.08);
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    font-family:'EB Garamond',Georgia,'Times New Roman',serif;
+    color:var(--ink);
+    font-size:18px;
+    line-height:1.6;
+    background-color:var(--parchment);
+    background-image:
+      radial-gradient(circle at 18% 12%, rgba(205,162,74,.10), transparent 42%),
+      radial-gradient(circle at 84% 8%, rgba(65,87,63,.10), transparent 40%),
+      radial-gradient(circle at 50% 120%, rgba(184,95,60,.10), transparent 55%),
+      repeating-linear-gradient(0deg, rgba(107,76,51,.018) 0 2px, transparent 2px 4px);
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:980px;margin:0 auto;padding:0 18px 64px;}
+
+  /* ---------- Header ---------- */
+  header.hero{
+    position:relative;
+    margin:22px auto 0;
+    max-width:980px;
+    border-radius:14px;
+    overflow:hidden;
+    background:
+      linear-gradient(180deg, rgba(65,87,63,.94), rgba(53,71,52,.97)),
+      radial-gradient(circle at 50% -20%, rgba(205,162,74,.35), transparent 60%);
+    box-shadow:var(--shadow);
+    border:1px solid rgba(67,53,42,.25);
+  }
+  .lights{display:block;width:100%;height:34px;}
+  .hero-inner{position:relative;padding:6px 26px 30px;text-align:center;color:#f6ecd6;}
+  .vine{position:absolute;width:96px;height:96px;opacity:.85;}
+  .vine.tl{top:30px;left:8px;}
+  .vine.tr{top:30px;right:8px;transform:scaleX(-1);}
+  .eyebrow{
+    font-family:'EB Garamond',serif;
+    text-transform:uppercase;letter-spacing:.32em;
+    font-size:.72rem;color:var(--gold);margin:4px 0 6px;font-weight:600;
+  }
+  h1.title{
+    font-family:'Cormorant Garamond',serif;
+    font-weight:600;font-style:italic;
+    font-size:clamp(2.4rem,7vw,4rem);
+    line-height:1;margin:0;color:#fbf3df;
+    text-shadow:0 2px 14px rgba(0,0,0,.25);
+  }
+  .title .sub-word{
+    display:block;font-style:normal;font-weight:500;
+    font-size:clamp(1.3rem,3.6vw,2rem);letter-spacing:.04em;color:#e9dcc0;margin-top:2px;
+  }
+  .meta{margin-top:14px;font-size:1.02rem;color:#efe3c8;}
+  .meta .dot{color:var(--gold);margin:0 8px;}
+  .ribbon{
+    display:inline-block;margin-top:14px;padding:5px 16px;
+    background:rgba(184,95,60,.92);color:#fdf2e2;border-radius:999px;
+    font-size:.82rem;letter-spacing:.06em;text-transform:uppercase;font-weight:600;
+    box-shadow:0 2px 8px rgba(0,0,0,.2);
+  }
+
+  /* ---------- Tabs ---------- */
+  nav.tabs{
+    position:sticky;top:0;z-index:20;
+    display:flex;flex-wrap:wrap;justify-content:center;gap:6px;
+    margin:16px auto 26px;max-width:980px;padding:10px;
+    background:rgba(244,234,211,.92);
+    backdrop-filter:blur(4px);
+    border-radius:12px;border:1px solid var(--card-edge);
+    box-shadow:var(--shadow-soft);
+  }
+  .tab{
+    font-family:'EB Garamond',serif;
+    font-size:.86rem;letter-spacing:.1em;text-transform:uppercase;font-weight:600;
+    color:var(--brown);background:transparent;border:1px solid transparent;
+    padding:7px 13px;border-radius:8px;cursor:pointer;transition:all .18s ease;
+    line-height:1;
+  }
+  .tab:hover{background:rgba(184,95,60,.12);color:var(--terracotta-deep);}
+  .tab:focus-visible{outline:2px solid var(--forest);outline-offset:2px;}
+  .tab[aria-selected="true"]{
+    background:var(--forest);color:#f6ecd6;border-color:var(--forest);
+    box-shadow:0 2px 8px rgba(65,87,63,.3);
+  }
+
+  /* ---------- Panels ---------- */
+  .panel{display:none;animation:fade .4s ease;}
+  .panel.active{display:block;}
+  @keyframes fade{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:none;}}
+  @media (prefers-reduced-motion:reduce){
+    .panel{animation:none;}
+    html{scroll-behavior:auto;}
+    .lights .bulb{animation:none !important;}
+  }
+
+  .section-head{text-align:center;margin:8px 0 22px;}
+  .section-head .label{
+    font-family:'EB Garamond',serif;text-transform:uppercase;letter-spacing:.28em;
+    font-size:.72rem;color:var(--terracotta);font-weight:600;
+  }
+  .section-head h2{
+    font-family:'Cormorant Garamond',serif;font-weight:600;font-style:italic;
+    font-size:clamp(1.9rem,4.5vw,2.7rem);color:var(--forest);margin:2px 0 0;line-height:1.05;
+  }
+  .lede{max-width:760px;margin:0 auto 26px;text-align:center;color:var(--ink-soft);font-size:1.05rem;}
+
+  .card{
+    background:var(--card);border:1px solid var(--card-edge);border-radius:12px;
+    padding:20px 22px;margin:0 0 20px;box-shadow:var(--shadow-soft);
+  }
+  .card h3{
+    font-family:'Cormorant Garamond',serif;font-weight:600;font-size:1.5rem;
+    color:var(--brown);margin:0 0 12px;letter-spacing:.01em;
+  }
+  .card h3 .leaf{color:var(--forest-soft);}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+  @media (max-width:680px){.grid2{grid-template-columns:1fr;}}
+
+  /* tables */
+  .t-wrap{overflow-x:auto;border-radius:10px;}
+  table{border-collapse:collapse;width:100%;font-size:.98rem;}
+  th,td{text-align:left;padding:10px 13px;vertical-align:top;border-bottom:1px solid var(--card-edge);}
+  thead th{
+    background:var(--forest);color:#f3e8cf;font-family:'EB Garamond',serif;
+    font-weight:600;letter-spacing:.06em;font-size:.82rem;text-transform:uppercase;
+    border-bottom:none;position:sticky;top:0;
+  }
+  tbody tr:nth-child(even){background:rgba(236,221,189,.4);}
+  tbody tr:last-child td{border-bottom:none;}
+  td.key{font-weight:600;color:var(--brown);white-space:nowrap;}
+  .fillin{color:#b9a988;font-style:italic;}
+
+  /* day cards */
+  .day{border-left:4px solid var(--terracotta);}
+  .day .daytitle{
+    font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:600;
+    font-size:1.4rem;color:var(--terracotta-deep);margin:0 0 4px;
+  }
+  .slot{display:grid;grid-template-columns:108px 1fr;gap:12px;padding:9px 0;border-top:1px dashed var(--card-edge);}
+  .slot:first-of-type{border-top:none;}
+  .slot .when{font-weight:600;color:var(--forest);letter-spacing:.04em;}
+  .feast{background:linear-gradient(180deg,#fbf3e6,#f8ece0);border-left-color:var(--berry);}
+  .feast .daytitle{color:var(--berry);}
+  .pill{display:inline-block;background:rgba(65,87,63,.12);color:var(--forest);font-size:.74rem;
+    letter-spacing:.06em;text-transform:uppercase;font-weight:600;padding:2px 9px;border-radius:999px;margin-right:6px;}
+  .pill.tbc{background:rgba(184,95,60,.15);color:var(--terracotta-deep);}
+  .pill.done{background:rgba(140,58,58,.14);color:var(--berry);}
+  ul.ideas{margin:6px 0 0;padding-left:18px;}
+  ul.ideas li{margin:2px 0;}
+
+  /* checklist */
+  ul.check{list-style:none;margin:0;padding:0;column-gap:32px;}
+  @media(min-width:620px){ul.check{column-count:2;}}
+  ul.check li{break-inside:avoid;margin:0 0 10px;}
+  ul.check label{display:flex;gap:11px;align-items:flex-start;cursor:pointer;}
+  ul.check input{
+    appearance:none;-webkit-appearance:none;min-width:20px;height:20px;margin-top:3px;
+    border:2px solid var(--forest-soft);border-radius:5px;background:var(--card);cursor:pointer;
+    display:grid;place-content:center;transition:all .15s ease;
+  }
+  ul.check input:checked{background:var(--forest);border-color:var(--forest);}
+  ul.check input:checked::after{content:"✓";color:#f6ecd6;font-size:13px;font-weight:700;}
+  ul.check input:checked + span{color:#a99878;text-decoration:line-through;}
+
+  /* simple bulleted lists */
+  ul.plain{margin:6px 0 0;padding-left:20px;}
+  ul.plain li{margin:5px 0;}
+  .note{
+    background:rgba(205,162,74,.12);border:1px solid rgba(205,162,74,.4);
+    border-radius:10px;padding:12px 16px;margin:14px 0 0;font-size:.95rem;color:var(--ink-soft);
+  }
+  .note b{color:var(--brown);}
+  .crew-fam{font-weight:600;color:var(--terracotta-deep);}
+
+  .editbox{display:flex;align-items:center;gap:16px;flex-wrap:wrap;
+    background:linear-gradient(180deg,#fbf1da,#f6e8c9);
+    border:1px solid rgba(205,162,74,.55);border-radius:12px;
+    padding:16px 20px;margin:0 0 22px;box-shadow:var(--shadow-soft);}
+  .editbox .ebicon{font-size:1.55rem;line-height:1;}
+  .editbox .ebcontent{flex:1;min-width:210px;}
+  .editbox .ebtitle{font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:600;
+    font-size:1.28rem;color:var(--brown);margin:0;}
+  .editbox .ebtext{margin:2px 0 0;font-size:.96rem;color:var(--ink-soft);}
+  .planner-btn{display:inline-block;white-space:nowrap;text-decoration:none;
+    background:var(--terracotta);color:#fdf2e2;font-family:'EB Garamond',serif;font-weight:600;
+    letter-spacing:.04em;font-size:.95rem;padding:10px 20px;border-radius:999px;
+    border:1px solid var(--terracotta-deep);box-shadow:0 2px 8px rgba(184,95,60,.3);
+    transition:all .18s ease;cursor:pointer;}
+  .planner-btn:hover{background:var(--terracotta-deep);transform:translateY(-1px);
+    box-shadow:0 4px 12px rgba(184,95,60,.4);}
+  .planner-btn.big{font-size:1.05rem;padding:12px 26px;}
+  .planner-btn.planner-off{opacity:.55;box-shadow:none;}
+  .planner-note{font-size:.92rem;color:var(--ink-soft);margin:10px 0 0;}
+  .planner-note a{font-weight:600;}
+  .sheet-embed{margin:18px 0 22px;}
+  .sheet-embed .se-label{font-family:'EB Garamond',serif;text-transform:uppercase;
+    letter-spacing:.16em;font-size:.74rem;font-weight:600;color:var(--forest);
+    margin:0 0 8px;display:flex;align-items:center;gap:7px;}
+  .sheet-embed .se-frame{border:1px solid var(--card-edge);border-radius:12px;overflow:hidden;
+    background:#fff;box-shadow:var(--shadow-soft);}
+  .sheet-embed .se-iframe{display:block;width:100%;height:360px;border:0;background:#fff;}
+  .sheet-embed .se-placeholder{padding:20px 22px;text-align:center;color:var(--ink-soft);
+    background:linear-gradient(180deg,#fbf1da,#f6e8c9);font-size:.94rem;line-height:1.5;}
+  .sheet-embed .se-placeholder b{color:var(--brown);}
+  footer.foot{
+    text-align:center;margin:40px auto 0;max-width:980px;padding:24px;
+    border-top:1px solid var(--card-edge);color:var(--ink-soft);
+  }
+  footer.foot .fh{
+    font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.6rem;color:var(--forest);margin:0;
+  }
+  footer.foot .fs{font-size:.98rem;margin:4px 0 0;}
+  a{color:var(--terracotta-deep);}
+  .src{font-size:.86rem;color:var(--ink-soft);}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <svg class="lights" viewBox="0 0 980 34" preserveAspectRatio="none" aria-hidden="true">
+    <path d="M0 6 Q245 30 490 8 Q735 30 980 6" fill="none" stroke="#3a4d39" stroke-width="2"/>
+    <g>
+      <circle class="bulb" cx="98" cy="20" r="5" fill="#f0c84e"/>
+      <circle class="bulb" cx="196" cy="24" r="5" fill="#e88c4a"/>
+      <circle class="bulb" cx="294" cy="23" r="5" fill="#f0c84e"/>
+      <circle class="bulb" cx="392" cy="18" r="5" fill="#e88c4a"/>
+      <circle class="bulb" cx="490" cy="15" r="5" fill="#f0c84e"/>
+      <circle class="bulb" cx="588" cy="18" r="5" fill="#e88c4a"/>
+      <circle class="bulb" cx="686" cy="23" r="5" fill="#f0c84e"/>
+      <circle class="bulb" cx="784" cy="24" r="5" fill="#e88c4a"/>
+      <circle class="bulb" cx="882" cy="20" r="5" fill="#f0c84e"/>
+    </g>
+  </svg>
+  <div class="hero-inner">
+    <svg class="vine tl" viewBox="0 0 100 100" aria-hidden="true">
+      <path d="M6 6 C30 24 40 50 38 92" fill="none" stroke="#7d9670" stroke-width="2.4" stroke-linecap="round"/>
+      <g fill="#8aa37b"><ellipse cx="20" cy="26" rx="9" ry="4.5" transform="rotate(36 20 26)"/><ellipse cx="33" cy="46" rx="9" ry="4.5" transform="rotate(60 33 46)"/><ellipse cx="38" cy="70" rx="8" ry="4" transform="rotate(78 38 70)"/></g>
+      <g fill="#c9a24a"><circle cx="14" cy="14" r="3"/><circle cx="44" cy="86" r="3"/></g>
+    </svg>
+    <svg class="vine tr" viewBox="0 0 100 100" aria-hidden="true">
+      <path d="M6 6 C30 24 40 50 38 92" fill="none" stroke="#7d9670" stroke-width="2.4" stroke-linecap="round"/>
+      <g fill="#8aa37b"><ellipse cx="20" cy="26" rx="9" ry="4.5" transform="rotate(36 20 26)"/><ellipse cx="33" cy="46" rx="9" ry="4.5" transform="rotate(60 33 46)"/><ellipse cx="38" cy="70" rx="8" ry="4" transform="rotate(78 38 70)"/></g>
+      <g fill="#c9a24a"><circle cx="14" cy="14" r="3"/><circle cx="44" cy="86" r="3"/></g>
+    </svg>
+    <p class="eyebrow">A cosy winter long weekend</p>
+    <h1 class="title">Angus Cuddlers<span class="sub-word">in the Mountains</span></h1>
+    <p class="meta">Mapleton, QLD <span class="dot">&bull;</span> Fri 26 &ndash; Mon 29 June 2026</p>
+    <span class="ribbon">&#127876; Christmas in July</span>
+  </div>
+</header>
+
+<nav class="tabs" role="tablist" aria-label="Sections">
+  <button class="tab" role="tab" aria-selected="true"  data-panel="welcome">Welcome</button>
+  <button class="tab" role="tab" aria-selected="false" data-panel="itinerary">Itinerary</button>
+  <button class="tab" role="tab" aria-selected="false" data-panel="stay">Stay</button>
+  <button class="tab" role="tab" aria-selected="false" data-panel="meals">Meals</button>
+  <button class="tab" role="tab" aria-selected="false" data-panel="groceries">Groceries</button>
+  <button class="tab" role="tab" aria-selected="false" data-panel="activities">Activities</button>
+  <button class="tab" role="tab" aria-selected="false" data-panel="weather">Weather</button>
+  <button class="tab" role="tab" aria-selected="false" data-panel="cocktails">Cocktails</button>
+  <button class="tab" role="tab" aria-selected="false" data-panel="packing">Packing</button>
+  <button class="tab" role="tab" aria-selected="false" data-panel="amenities">Amenities</button>
+</nav>
+
+<div class="wrap">
+
+  <!-- WELCOME -->
+  <section class="panel active" id="welcome" role="tabpanel">
+    <div class="section-head"><span class="label">Welcome to the weekend</span><h2>Four families, one cosy cabin</h2></div>
+    <p class="lede">Three nights up on the Mapleton hinterland for a cosy winter long weekend &mdash; open fires, warm mugs, forest walks, and a proper Christmas in July feast to finish.</p>
+
+    <div class="editbox"><span class="ebicon">✏️</span><div class="ebcontent"><p class="ebtitle">Filled in together</p><p class="ebtext">Family names, who&rsquo;s bringing what, meal claims and dietary needs all live in our shared planner &mdash; pop your bits in any time.</p></div><a class="planner-btn big" href="#" target="_blank" rel="noopener">✏️ Open shared planner</a></div>
+
+    <div class="card">
+      <h3><span class="leaf">&#127795;</span> The crew</h3>
+      <p style="margin-top:0;">4 families &bull; 13 people (8 adults + 5 kids)</p>
+      <div class="t-wrap"><table>
+        <thead><tr><th>Tag</th><th>Make-up</th></tr></thead>
+        <tbody>
+          <tr><td class="key">Family 1</td><td>2 adults + 2 children</td></tr>
+          <tr><td class="key">Family 2</td><td>2 adults + 2 children</td></tr>
+          <tr><td class="key">Family 3</td><td>2 adults + 1 child</td></tr>
+          <tr><td class="key">Family 4</td><td>2 adults (no children)</td></tr>
+        </tbody>
+      </table></div>
+      <p class="planner-note">Add your family name against your tag in the <a class="planner-btn-link" href="#" target="_blank" rel="noopener">shared planner</a>.</p>
+      <div class="note">&#9749; A coffee machine will be available, courtesy of the Shorts.</div>
+    </div>
+
+    <div class="sheet-embed" data-embed="crew"><p class="se-label">📋 Live — family names</p><div class="se-frame"></div></div>
+
+    <div class="card">
+      <h3><span class="leaf">&#128218;</span> What&rsquo;s in each tab</h3>
+      <div class="t-wrap"><table>
+        <tbody>
+          <tr><td class="key">Itinerary</td><td>Rough day-by-day plan for the long weekend</td></tr>
+          <tr><td class="key">Stay</td><td>Woody Grove details &mdash; rooms, beds and everything to know</td></tr>
+          <tr><td class="key">Meals</td><td>Who&rsquo;s cooking what, plus a bank of easy recipes for the group</td></tr>
+          <tr><td class="key">Groceries</td><td>Suggested shopping list (Mapleton has an IGA in town!)</td></tr>
+          <tr><td class="key">Activities</td><td>Things to do in Mapleton &amp; the hinterland &mdash; incl. kid &amp; wet-weather options</td></tr>
+          <tr><td class="key">Weather</td><td>Approx. temperatures for late June + a 3-year average</td></tr>
+          <tr><td class="key">Cocktails</td><td>Warming bourbon/whisky/tequila drinks for by the fire</td></tr>
+          <tr><td class="key">Packing</td><td>What to bring &mdash; it gets cold up on the range in June!</td></tr>
+          <tr><td class="key">Amenities</td><td>What&rsquo;s available locally and what to bring from home</td></tr>
+        </tbody>
+      </table></div>
+    </div>
+  </section>
+
+  <!-- ITINERARY -->
+  <section class="panel" id="itinerary" role="tabpanel">
+    <div class="section-head"><span class="label">The plan</span><h2>Day by day</h2></div>
+    <p class="lede">A rough plan &mdash; tweak as you like!</p>
+
+    <div class="card day">
+      <p class="daytitle">Friday 26 June</p>
+      <div class="slot"><span class="when">Morning</span><span>Travel day &mdash; drive up to Mapleton (check-in from 1pm)</span></div>
+      <div class="slot"><span class="when">Afternoon</span><span>Arrive &amp; settle in, claim rooms, grocery top-up at Mapleton IGA, pool / billiards</span></div>
+      <div class="slot"><span class="when">Evening</span><span>Dinner out at the Mapleton Public House (booked ahead). Drinks back at the house after.</span></div>
+    </div>
+
+    <div class="card day">
+      <p class="daytitle">Saturday 27 June</p>
+      <div class="slot"><span class="when">Morning</span><span>Eumundi Markets (open Sat 7am&ndash;2pm) <b>OR</b> Mapleton Falls lookout &amp; a forest walk</span></div>
+      <div class="slot"><span class="when">Afternoon</span><span>Kondalilla Falls walk or Baroon Pocket Dam; picnic lunch</span></div>
+      <div class="slot"><span class="when">Evening</span><span>Slow-cooked dinner back at the house; billiards / board games / cards</span></div>
+    </div>
+
+    <div class="card day">
+      <p class="daytitle">Sunday 28 June</p>
+      <div class="slot"><span class="when">Morning</span><span>Maleny Botanic Gardens &amp; Bird World &mdash; walk-through aviaries (700+ birds) &amp; gardens. Allow a few hours; buggies available.</span></div>
+      <div class="slot"><span class="when">Afternoon</span><span>Home for Family 4&rsquo;s BBQ lunch on the property &middot; then Montville village &mdash; shops, water wheel, Russell Family Park for the kids</span></div>
+      <div class="slot"><span class="when">Evening</span><span>&#127876; Christmas in July feast! Family 2 cooks: roast chicken &amp; glazed ham with all the trimmings &mdash; roast potatoes, stuffing, carrots, gravy &amp; cranberry sauce. Christmas pudding for dessert. Drinks &amp; bon bons by the fire!</span></div>
+    </div>
+
+    <div class="card day">
+      <p class="daytitle">Monday 29 June</p>
+      <div class="slot"><span class="when">Morning</span><span>Pack up, simple breakfast or a Mapleton cafe, tidy for 11am checkout (return gate openers!)</span></div>
+      <div class="slot"><span class="when">Afternoon</span><span>Check out &amp; drive home (maybe a stop at the Big Pineapple on the way)</span></div>
+    </div>
+  </section>
+
+  <!-- STAY -->
+  <section class="panel" id="stay" role="tabpanel">
+    <div class="section-head"><span class="label">Where we&rsquo;re staying</span><h2>Woody Grove Retreat</h2></div>
+    <p class="lede">Grand 7-bedroom home on 21 acres &mdash; entire home, rated 5.0&#9733; (38 reviews), Mapleton.</p>
+
+    <div class="card">
+      <h3><span class="leaf">&#127968;</span> Property details</h3>
+      <div class="t-wrap"><table><tbody>
+        <tr><td class="key">Property</td><td>Woody Grove Retreat &mdash; Grand 7 Bedroom Mapleton Home</td></tr>
+        <tr><td class="key">Location</td><td>Mapleton, Sunshine Coast Hinterland, QLD (21-acre estate; exact address provided after booking)</td></tr>
+        <tr><td class="key">Listing</td><td>Airbnb listing 21357827</td></tr>
+        <tr><td class="key">Check-in</td><td>Friday 26 June 2026 &mdash; between 1:00pm and 10:00pm</td></tr>
+        <tr><td class="key">Check-out</td><td>Monday 29 June 2026 &mdash; before 11:00am (3 nights)</td></tr>
+        <tr><td class="key">Layout</td><td>Main Lodge + The Annex, joined by a connecting door; both self-contained but used as one big house</td></tr>
+        <tr><td class="key">Sleeps</td><td>16+ guests &mdash; up to 17 in individual beds. 7 bedrooms, 10 beds, 7 private ensuite baths</td></tr>
+        <tr><td class="key">Beds</td><td>Most rooms are King beds that can split into twin singles; plus 1 queen &amp; several singles</td></tr>
+        <tr><td class="key">Bathrooms</td><td>7 private ensuites</td></tr>
+        <tr><td class="key">Linen &amp; towels</td><td>Provided (5&#9733; managed property; luxury bathrobes &amp; slippers included too)</td></tr>
+        <tr><td class="key">Kitchen</td><td>Chef&rsquo;s kitchen in the Lodge + a second kitchen/living &ldquo;Snug&rdquo; in the Annex</td></tr>
+        <tr><td class="key">Heating / cooling</td><td>Fully air-conditioned; double-sided fireplace in the main living + a fireplace in the media room</td></tr>
+        <tr><td class="key">Wi-Fi</td><td>Complimentary internet (mobile reception can be patchy on the range &mdash; download offline maps)</td></tr>
+        <tr><td class="key">Parking</td><td>Free parking on premises; gate openers provided &mdash; return them on checkout</td></tr>
+        <tr><td class="key">Pool &amp; extras</td><td>Private pool (one of few in the area), billiards room, media room, large decks, forest trails, BBQ</td></tr>
+        <tr><td class="key">Breakfast treats</td><td>Host provides local coffee, preserves, a selection of teas, croissants &amp; other treats</td></tr>
+        <tr><td class="key">House rules</td><td>No pets. Listed as not suitable for children/infants. No garden weddings. Keep evening noise down for neighbours.</td></tr>
+        <tr><td class="key">Host</td><td>Melanie (managed by Luxury Coastal Destinations); co-host Georgina. Responds within an hour.</td></tr>
+      </tbody></table></div>
+    </div>
+
+    <div class="card">
+      <h3><span class="leaf">&#128719;</span> Sleeping plan</h3>
+      <p style="margin-top:0;font-size:.95rem;color:var(--ink-soft);">King = splits into twins</p>
+      <div class="t-wrap"><table>
+        <thead><tr><th>Room</th><th>Beds / sleeps</th></tr></thead>
+        <tbody>
+          <tr><td class="key">Zen Suite (Annex)</td><td>1 King (or split twins) = 2</td></tr>
+          <tr><td class="key">Poppy room (Annex)</td><td>1 King/twins + 1 single = up to 3</td></tr>
+          <tr><td class="key">Buttercup room (Lodge)</td><td>1 Queen + 1 single = up to 3</td></tr>
+          <tr><td class="key">Zen dressing room (Annex)</td><td>1 single = 1</td></tr>
+          <tr><td class="key">Beetle room (Lodge)</td><td>1 King/twins (+ single) = 2&ndash;3</td></tr>
+          <tr><td class="key">Garden room (Annex)</td><td>1 King (or split twins) = 2</td></tr>
+          <tr><td class="key">Lavender room (Lodge)</td><td>1 King (or split twins) = 2</td></tr>
+          <tr><td class="key">Living room</td><td>1 single = 1</td></tr>
+        </tbody>
+      </table></div>
+      <div class="note"><b>Tip:</b> with mostly King-or-twin rooms and 7 ensuites, the 4 families split easily. Decide bed splits (King vs twins) in advance and let the host know.</div>
+    </div>
+  </section>
+
+  <!-- MEALS -->
+  <section class="panel" id="meals" role="tabpanel">
+    <div class="section-head"><span class="label">Feeding 13</span><h2>Meal plan</h2></div>
+    <p class="lede">Breakfasts are self-catered (each family sorts their own). Friday dinner is a group outing. Saturday lunch, Saturday dinner and Sunday lunch are still open &mdash; ideas below. Sunday dinner (Christmas in July) is locked in for Family 2.</p>
+
+    <div class="card day">
+      <p class="daytitle">Friday 26 June</p>
+      <div class="slot"><span class="when">Breakfast</span><span><span class="pill">Each family</span>Self-catered (most still travelling)</span></div>
+      <div class="slot"><span class="when">Lunch</span><span>On the road / grab on the way up</span></div>
+      <div class="slot"><span class="when">Dinner</span><span><span class="pill done">Everyone</span>Group dinner out &mdash; Mapleton Public House (~5 min). Open Fri to 10pm. Book ahead for 13!</span></div>
+    </div>
+
+    <div class="card day">
+      <p class="daytitle">Saturday 27 June</p>
+      <div class="slot"><span class="when">Breakfast</span><span><span class="pill">Each family</span>Self-catered</span></div>
+      <div class="slot"><span class="when">Lunch</span><span><span class="pill tbc">TBC</span>Ideas from the meal bank:
+        <ul class="ideas"><li>Build-your-own wrap / sandwich bar</li><li>BBQ chooks + salads (grab from IGA)</li><li>Baked frittata (make ahead, serve cold)</li></ul></span></div>
+      <div class="slot"><span class="when">Dinner</span><span><span class="pill tbc">TBC</span>Ideas from the meal bank:
+        <ul class="ideas"><li>Slow-cooked chilli con carne with rice &amp; toppings</li><li>Butter chicken + rice (mild &mdash; great for a cold night)</li><li>Slow cooker pulled pork rolls with slaw</li></ul></span></div>
+    </div>
+
+    <div class="card day">
+      <p class="daytitle">Sunday 28 June</p>
+      <div class="slot"><span class="when">Breakfast</span><span><span class="pill">Each family</span>Self-catered</span></div>
+      <div class="slot"><span class="when">Lunch</span><span><span class="pill tbc">TBC</span>Ideas from the meal bank:
+        <ul class="ideas"><li>Sausage sizzle / BBQ on the property</li><li>Grazing spread &mdash; cheese, dips, cold meats &amp; salads</li><li>Baked frittata + salad</li></ul></span></div>
+      <div class="slot"><span class="when">Dinner</span><span><span class="pill done">Family 2</span>&#127876; <b>Christmas in July feast</b> &mdash; roast chicken &amp; glazed ham with all the trimmings: roast potatoes, stuffing, glazed carrots &amp; parsnip, gravy &amp; cranberry sauce. Christmas pudding with cream &amp; custard for dessert. Don&rsquo;t forget the bon bons!</span></div>
+    </div>
+
+    <div class="card day">
+      <p class="daytitle">Monday 29 June</p>
+      <div class="slot"><span class="when">Breakfast</span><span><span class="pill">Each family</span>Self-catered &mdash; keep it light for checkout</span></div>
+      <div class="slot"><span class="when">Onward</span><span>Heading home</span></div>
+    </div>
+
+    <div class="card feast day">
+      <h3 style="color:var(--berry);"><span>&#127876;</span> Meal responsibilities</h3>
+      <div class="t-wrap"><table><tbody>
+        <tr><td class="key">Fri dinner</td><td>Group outing &mdash; Mapleton Public House. No lead family needed, just book ahead.</td></tr>
+        <tr><td class="key">Sat lunch</td><td><span class="pill tbc">Open</span></td></tr>
+        <tr><td class="key">Sat dinner</td><td><span class="pill tbc">Open</span></td></tr>
+        <tr><td class="key">Sun lunch</td><td><span class="pill tbc">Open</span></td></tr>
+        <tr><td class="key">Sun dinner</td><td>&#127876; <b>CONFIRMED</b> &mdash; Family 2: Christmas in July feast</td></tr>
+      </tbody></table></div>
+    </div>
+
+    <div class="editbox"><span class="ebicon">✏️</span><div class="ebcontent"><p class="ebtitle">Filled in together</p><p class="ebtext">Three slots are still open &mdash; Sat lunch, Sat dinner and Sun lunch. Claim your couple&rsquo;s turn in the shared planner.</p></div><a class="planner-btn" href="#" target="_blank" rel="noopener">✏️ Claim a meal</a></div>
+
+    <div class="sheet-embed" data-embed="meals"><p class="se-label">📋 Live — meal claims &amp; dietary needs</p><div class="se-frame"></div></div>
+
+    <div class="card">
+      <h3><span class="leaf">&#129361;</span> Dietary requirements &amp; allergies</h3>
+      <p style="margin-top:0;color:var(--ink-soft);font-size:.95rem;">So whoever&rsquo;s cooking knows before they shop.</p>
+      <div class="editbox"><span class="ebicon">✏️</span><div class="ebcontent"><p class="ebtitle">Filled in together</p><p class="ebtext">Add any allergies or dietary needs for your family &mdash; on the Meals tab of the shared planner.</p></div><a class="planner-btn" href="#" target="_blank" rel="noopener">✏️ Add dietary needs</a></div>
+    </div>
+
+    <div class="card">
+      <h3><span class="leaf">&#128221;</span> Meal ideas &amp; recipes</h3>
+      <p style="margin-top:0;color:var(--ink-soft);font-size:.95rem;">Pick one for your couple&rsquo;s turn (all scale easily to 13).</p>
+      <div class="t-wrap"><table>
+        <thead><tr><th>Meal</th><th>Type</th><th>Why it&rsquo;s easy for a crowd</th><th>Recipe</th></tr></thead>
+        <tbody>
+          <tr><td class="key">Taco / burrito bar</td><td>Dinner</td><td>Big batch of seasoned mince; everyone builds their own, so it suits all ages &amp; fussy eaters</td><td>RecipeTin Eats &mdash; Beef Tacos</td></tr>
+          <tr><td class="key">Chilli con carne / nachos</td><td>Dinner</td><td>One big pot over rice or corn chips; even better made the day before</td><td>RecipeTin Eats &mdash; Chilli Con Carne</td></tr>
+          <tr><td class="key">Lasagne</td><td>Dinner</td><td>Assemble trays at home, just bake on the night. Add garlic bread &amp; salad</td><td>RecipeTin Eats &mdash; Lasagna</td></tr>
+          <tr><td class="key">Slow cooker pulled pork rolls</td><td>Dinner</td><td>Set it in the morning, shred at dinner; serve in rolls with slaw. Hands-off all day</td><td>RecipeTin Eats &mdash; Pulled Pork</td></tr>
+          <tr><td class="key">Butter chicken + rice (mild)</td><td>Dinner</td><td>Big mild batch for everyone; chilli on the side for adults. Great in the cold</td><td>RecipeTin Eats &mdash; Butter Chicken</td></tr>
+          <tr><td class="key">Sheet-pan roast chicken &amp; veg</td><td>Dinner</td><td>Chicken &amp; chopped veg across a few trays in the oven. Minimal watching</td><td>RecipeTin Eats &mdash; Roast Chicken</td></tr>
+          <tr><td class="key">Sausage sizzle / BBQ</td><td>Dinner</td><td>Snags, burgers &amp; a couple of salads on the house BBQ. About as low-effort as it gets</td><td>(No recipe needed)</td></tr>
+          <tr><td class="key">Build-your-own sandwich / wrap bar</td><td>Lunch</td><td>Lay out cold cuts, cheese, salad &amp; spreads; everyone makes their own. No cooking</td><td>(No recipe needed)</td></tr>
+          <tr><td class="key">Grazing / ploughman&rsquo;s spread</td><td>Lunch</td><td>Cheese, crackers, dips, cold meats, fruit + a couple of salads. Zero-cook</td><td>(No recipe needed)</td></tr>
+          <tr><td class="key">Marinated veg pasta salad</td><td>Lunch</td><td>Make-ahead, lasts for days, great BBQ side or stand-alone. Add chicken for protein</td><td>RecipeTin Eats &mdash; Pasta Salad</td></tr>
+          <tr><td class="key">Baked frittata</td><td>Lunch</td><td>Plonk everything in a dish &amp; bake; serve warm or cold with salad &amp; bread</td><td>RecipeTin Eats &mdash; Baked Frittata</td></tr>
+          <tr><td class="key">BBQ chooks + salads</td><td>Lunch</td><td>Grab rotisserie chickens from the IGA &amp; add pasta/rice/green salads. Near no-cook</td><td>(No recipe needed)</td></tr>
+        </tbody>
+      </table></div>
+      <div class="note"><b>Scaling tip for ~13</b> (8 adults + 5 kids): about 2&ndash;2.5kg mince, 1.3&ndash;1.5kg dry pasta, 1&ndash;1.2kg dry rice, or 25&ndash;30 sausages per meal. &lsquo;Build-your-own&rsquo; meals scale best &mdash; prep components, not 13 plates. Keep mains mild &amp; put the heat on the side for the kids.</div>
+    </div>
+  </section>
+
+  <!-- GROCERIES -->
+  <section class="panel" id="groceries" role="tabpanel">
+    <div class="section-head"><span class="label">Shopping list</span><h2>Groceries for the group</h2></div>
+    <p class="lede">For 13 (8 adults + 5 kids). Mapleton IGA (28 Flaxton Dr) is open 6am&ndash;7pm every day with fuel, deli &amp; coffee. Bring perishables/pre-prepped meals from home and top up locally.</p>
+
+    <div class="editbox"><span class="ebicon">✏️</span><div class="ebcontent"><p class="ebtitle">Filled in together</p><p class="ebtext">This is the suggested list. Claim what your family will bring &mdash; tracked in the &lsquo;Who&rsquo;s bringing it&rsquo; column of the shared planner.</p></div><a class="planner-btn" href="#" target="_blank" rel="noopener">✏️ Claim items</a></div>
+
+    <div class="sheet-embed" data-embed="groceries"><p class="se-label">📋 Live — who&rsquo;s bringing what</p><div class="se-frame"></div></div>
+
+    <div class="card">
+      <h3><span class="leaf">&#127859;</span> Breakfasts <span style="font-size:.9rem;font-weight:400;color:var(--ink-soft);">(each family self-caters &mdash; buy your own)</span></h3>
+      <div class="t-wrap"><table>
+        <thead><tr><th>Item</th><th>Approx qty for the group</th></tr></thead>
+        <tbody>
+          <tr><td class="key">Bacon</td><td>2&ndash;3 kg</td></tr>
+          <tr><td class="key">Eggs</td><td>3 dozen</td></tr>
+          <tr><td class="key">Sausages</td><td>2 kg</td></tr>
+          <tr><td class="key">Bread / toast</td><td>4&ndash;5 loaves</td></tr>
+          <tr><td class="key">Baked beans</td><td>4 large tins</td></tr>
+          <tr><td class="key">Tomatoes &amp; mushrooms</td><td>1 kg each</td></tr>
+          <tr><td class="key">Pancake mix &amp; maple syrup</td><td>2 boxes + syrup</td></tr>
+          <tr><td class="key">Cereal</td><td>2&ndash;3 boxes</td></tr>
+          <tr><td class="key">Milk</td><td>6&ndash;8 L</td></tr>
+          <tr><td class="key">Butter / spreads (Vegemite, jam, Nutella)</td><td>assorted</td></tr>
+          <tr><td class="key">Fruit (bananas, apples, berries)</td><td>plenty</td></tr>
+        </tbody>
+      </table></div>
+    </div>
+
+    <div class="card">
+      <h3><span class="leaf">&#129385;</span> Lunches</h3>
+      <div class="t-wrap"><table>
+        <thead><tr><th>Item</th><th>Approx qty for the group</th></tr></thead>
+        <tbody>
+          <tr><td class="key">Wraps &amp; sandwich bread</td><td>for ~13 &times; 2 days</td></tr>
+          <tr><td class="key">Sandwich fillings (ham, chicken, cheese, salad)</td><td>assorted</td></tr>
+          <tr><td class="key">Cheese, crackers, dips, antipasto (grazing)</td><td>large platter qty</td></tr>
+          <tr><td class="key">Cold meats / charcuterie</td><td>1&ndash;1.5 kg</td></tr>
+          <tr><td class="key">Salad ingredients (lettuce, tomato, cucumber, etc.)</td><td>for big salads</td></tr>
+          <tr><td class="key">Sausages &amp; burger patties (Sunday BBQ lunch)</td><td>2&ndash;3 kg combined</td></tr>
+          <tr><td class="key">Burger buns &amp; bread rolls (for BBQ)</td><td>2 packs each</td></tr>
+          <tr><td class="key">BBQ condiments (tomato sauce, mustard, mayo)</td><td>assorted</td></tr>
+        </tbody>
+      </table></div>
+    </div>
+
+    <div class="card">
+      <h3><span class="leaf">&#127869;</span> Dinners</h3>
+      <div class="t-wrap"><table>
+        <thead><tr><th>Item</th><th>Approx qty for the group</th></tr></thead>
+        <tbody>
+          <tr><td class="key">Beef mince (chilli only)</td><td>2&ndash;2.5 kg</td></tr>
+          <tr><td class="key">Kidney beans, tinned tomatoes, chilli/taco spices</td><td>assorted</td></tr>
+          <tr><td class="key">Rice &amp; corn chips</td><td>2 kg rice + chips</td></tr>
+          <tr><td class="key">Garlic bread</td><td>4&ndash;5 loaves</td></tr>
+          <tr><td class="key">Sour cream, avocado, extra cheese (toppings)</td><td>assorted</td></tr>
+          <tr><td class="key">Christmas ham (bone-in, glazed)</td><td>3&ndash;4 kg</td></tr>
+          <tr><td class="key">Whole chickens or turkey breast roast</td><td>3&ndash;4 birds / 3&ndash;4 kg</td></tr>
+          <tr><td class="key">Roasting potatoes</td><td>3 kg</td></tr>
+          <tr><td class="key">Mixed veg for roasting (pumpkin, parsnip, carrots, beans)</td><td>assorted</td></tr>
+          <tr><td class="key">Stuffing mix</td><td>3&ndash;4 packets</td></tr>
+          <tr><td class="key">Gravy (jars or from pan drippings)</td><td>3&ndash;4 jars</td></tr>
+          <tr><td class="key">Cranberry sauce</td><td>2 jars</td></tr>
+          <tr><td class="key">Christmas pudding (pre-made)</td><td>1&ndash;2</td></tr>
+          <tr><td class="key">Custard &amp; cream (for pudding)</td><td>plenty</td></tr>
+          <tr><td class="key">Christmas crackers / bon bons (optional but fun!)</td><td>1 box</td></tr>
+        </tbody>
+      </table></div>
+    </div>
+
+    <div class="card">
+      <h3><span class="leaf">&#127863;</span> Drinks &amp; extras</h3>
+      <div class="t-wrap"><table>
+        <thead><tr><th>Item</th><th>Approx qty for the group</th></tr></thead>
+        <tbody>
+          <tr><td class="key">Tea, coffee, hot chocolate</td><td>assorted</td></tr>
+          <tr><td class="key">Juice / soft drink / water</td><td>plenty</td></tr>
+          <tr><td class="key">Alcohol (BYO &mdash; warm drinks like red wine, whisky)</td><td>as desired</td></tr>
+          <tr><td class="key">Snacks, chips, lollies for the kids</td><td>plenty</td></tr>
+          <tr><td class="key">Marshmallows (if there&rsquo;s a fire pit)</td><td>2 bags</td></tr>
+        </tbody>
+      </table></div>
+    </div>
+  </section>
+
+  <!-- ACTIVITIES -->
+  <section class="panel" id="activities" role="tabpanel">
+    <div class="section-head"><span class="label">Things to do</span><h2>Mapleton &amp; the hinterland</h2></div>
+    <p class="lede">A mix of close-by spots and short drives, with plenty for the kids. Always check park alerts after rain &mdash; trails get slippery up here.</p>
+
+    <div class="card">
+      <h3><span class="leaf">&#127968;</span> At Woody Grove <span style="font-size:.9rem;font-weight:400;color:var(--ink-soft);">(no driving!)</span></h3>
+      <div class="t-wrap"><table>
+        <thead><tr><th>Activity</th><th>What &amp; why</th><th>Roughly</th></tr></thead>
+        <tbody>
+          <tr><td class="key">The pool</td><td>Private pool on the estate &mdash; one of the few in the area. Pack swimmers even in June for a quick dip / poolside lazing.</td><td>on site</td></tr>
+          <tr><td class="key">Billiards room</td><td>Indoor billiards &mdash; perfect for evenings and rainy spells.</td><td>on site</td></tr>
+          <tr><td class="key">21 acres, decks &amp; BBQ</td><td>Open lawns, forest trails, abundant birdlife and big decks for sunset drinks and a family BBQ.</td><td>on site</td></tr>
+        </tbody>
+      </table></div>
+    </div>
+
+    <div class="card">
+      <h3><span class="leaf">&#128694;</span> Around Mapleton <span style="font-size:.9rem;font-weight:400;color:var(--ink-soft);">(5&ndash;15 min)</span></h3>
+      <div class="t-wrap"><table>
+        <thead><tr><th>Activity</th><th>What &amp; why</th><th>Roughly</th></tr></thead>
+        <tbody>
+          <tr><td class="key">Mapleton Falls &amp; lookout</td><td>The signature local sight &mdash; a viewing platform over a 120m drop into the Obi Obi Valley. Easy, short, big payoff. Wompoo walking circuit nearby.</td><td>10 min</td></tr>
+          <tr><td class="key">Mapleton National Park walks</td><td>Short rainforest/eucalypt day walks; sections link into the Sunshine Coast Hinterland Great Walk. Shared with mountain bikers on weekends.</td><td>10 min</td></tr>
+          <tr><td class="key">Point Glorious lookout</td><td>~400m elevation, sweeping coast &amp; hinterland views. Picnic tables. Good easy stop with the kids.</td><td>20 min</td></tr>
+          <tr><td class="key">Mapleton Lilyponds</td><td>Pretty ponds &amp; parkland behind the bowls club &mdash; easy stroll, ducks, good for little legs.</td><td>5 min</td></tr>
+        </tbody>
+      </table></div>
+    </div>
+
+    <div class="card">
+      <h3><span class="leaf">&#128167;</span> Waterfalls &amp; nature <span style="font-size:.9rem;font-weight:400;color:var(--ink-soft);">(great for kids)</span></h3>
+      <div class="t-wrap"><table>
+        <thead><tr><th>Activity</th><th>What &amp; why</th><th>Roughly</th></tr></thead>
+        <tbody>
+          <tr><td class="key">Kondalilla Falls (Montville)</td><td>90m falls. Picnic Creek circuit 2.4km (~45 min) reaches the rock pools; full Falls circuit 4.7km (~2 hrs, 300+ steps, steep). Swimming hole in warmer weather.</td><td>20 min</td></tr>
+          <tr><td class="key">Mary Cairncross Scenic Reserve (Maleny)</td><td>Stroller-friendly rainforest walk, Discovery Centre, playground, BBQs, cafe &amp; Glasshouse Mtns views. Spot pademelons. Best easy family day.</td><td>35 min</td></tr>
+          <tr><td class="key">Gardners Falls (Maleny)</td><td>Free swimming hole with shallow rock pools for little kids + bigger pool under the falls. ~5 min walk in. Carpark fills fast. &#10084; Extra special &mdash; the Shorts got married here, so it&rsquo;d be lovely for everyone to see it!</td><td>35 min</td></tr>
+          <tr><td class="key">Maleny Botanic Gardens &amp; Bird World</td><td>18 acres of gardens, walk-through aviaries (700+ birds), petting farm. Buggies for tired legs. Full family day out.</td><td>35 min</td></tr>
+          <tr><td class="key">Baroon Pocket Dam</td><td>Scenic dam ~15 min from the house &mdash; kayaking, picnics, easy lakeside walks and photography.</td><td>15 min</td></tr>
+        </tbody>
+      </table></div>
+    </div>
+
+    <div class="card">
+      <h3><span class="leaf">&#127978;</span> Villages, shops &amp; views</h3>
+      <div class="t-wrap"><table>
+        <thead><tr><th>Activity</th><th>What &amp; why</th><th>Roughly</th></tr></thead>
+        <tbody>
+          <tr><td class="key">Montville village</td><td>Cute Tudor-style shopping village &mdash; galleries, fudge &amp; lolly shops, cafes, the famous water wheel, and Russell Family Park playground for the kids.</td><td>20 min</td></tr>
+          <tr><td class="key">Maleny town</td><td>Browsing, bookshops, cheese &amp; local produce, lookouts (McCarthy&rsquo;s) over the Glasshouse Mountains.</td><td>35 min</td></tr>
+          <tr><td class="key">Maleny Cheese / Kenilworth dairy</td><td>Cheese &amp; yoghurt tastings, cafe, cow-watching with a view. Crowd-pleaser of a stop.</td><td>35&ndash;50 min</td></tr>
+          <tr><td class="key">Eumundi Markets (Saturday!)</td><td>Australia&rsquo;s famous artisan market &mdash; 600+ stalls, street food &amp; live music. Open Sat 7am&ndash;2pm, so it lines up perfectly with your Saturday. Get there before 9am.</td><td>30 min</td></tr>
+        </tbody>
+      </table></div>
+    </div>
+
+    <div class="card">
+      <h3><span class="leaf">&#127757;</span> Bigger day trips &amp; wet-weather backups</h3>
+      <div class="t-wrap"><table>
+        <thead><tr><th>Activity</th><th>What &amp; why</th><th>Roughly</th></tr></thead>
+        <tbody>
+          <tr><td class="key">Wildlife HQ Zoo &amp; the Big Pineapple (Woombye)</td><td>200+ animals &mdash; meerkats, sun bear, quokkas. Right by the iconic Big Pineapple. Easy on the drive home.</td><td>30 min</td></tr>
+          <tr><td class="key">Australia Zoo (Beerwah)</td><td>The big one &mdash; koalas, crocs, kangaroos, daily shows. A full day; book ahead.</td><td>45 min</td></tr>
+          <tr><td class="key">Hologram Zoo (Nambour)</td><td>Indoor hologram animal experience &mdash; perfect rainy-day option the kids love.</td><td>25 min</td></tr>
+          <tr><td class="key">Amaze World hedge maze (Nambour)</td><td>Giant hedge maze &amp; mini-golf style fun &mdash; good energy-burner for the kids.</td><td>25 min</td></tr>
+          <tr><td class="key">The Ginger Factory (Yandina)</td><td>Train rides, ginger everything, family-friendly and partly undercover.</td><td>30 min</td></tr>
+        </tbody>
+      </table></div>
+    </div>
+
+    <div class="card">
+      <h3><span class="leaf">&#127863;</span> Food &amp; drink</h3>
+      <div class="t-wrap"><table>
+        <thead><tr><th>Place</th><th>What &amp; why</th><th>Roughly</th></tr></thead>
+        <tbody>
+          <tr><td class="key">Mapleton Public House</td><td>Local favourite &mdash; paddock-to-plate gastropub with hinterland views, sourced from The Falls Farm. Book for a night off cooking.</td><td>3&ndash;5 min</td></tr>
+          <tr><td class="key">Bella Vista Pizza &amp; Pasta (Mapleton)</td><td>Family-friendly Italian with mountain views &mdash; handy and casual for the kids.</td><td>3&ndash;5 min</td></tr>
+          <tr><td class="key">Fishtales Cafe (Mapleton)</td><td>Casual coffee spot with a good breakfast &mdash; the easy Monday-morning checkout option.</td><td>3&ndash;5 min</td></tr>
+          <tr><td class="key">Flaxton Gardens</td><td>Award-winning vineyard restaurant with sweeping views, just down the range.</td><td>8 min</td></tr>
+          <tr><td class="key">Montville cafes (Poets, Wild Rocket @ Misty&rsquo;s, Altitude)</td><td>Heritage cafes, a microbrewery pub and view-laden dining throughout the village.</td><td>10&ndash;20 min</td></tr>
+          <tr><td class="key">Brouhaha Brewery (Maleny)</td><td>Boutique beers &amp; gourmet food in a relaxed setting &mdash; good for the grown-ups.</td><td>25 min</td></tr>
+        </tbody>
+      </table></div>
+    </div>
+  </section>
+
+  <!-- WEATHER -->
+  <section class="panel" id="weather" role="tabpanel">
+    <div class="section-head"><span class="label">What to expect</span><h2>Weather &mdash; late June</h2></div>
+    <p class="lede">Mapleton sits at ~374m on the Mapleton hinterland, so it runs a few degrees cooler than the coast below &mdash; mild, pleasant days and cold, crisp nights.</p>
+
+    <div class="note" style="max-width:760px;margin:0 auto 22px;">Figures below are approximate &mdash; based on the Mapleton-area climate record (BOM &ldquo;Mapleton PO&rdquo; station, 374m) and typical recent-year patterns, not exact daily readings for these dates. Check the BOM forecast closer to your trip for precise numbers.</div>
+
+    <div class="grid2">
+      <div class="card">
+        <h3><span class="leaf">&#128197;</span> June average (Mapleton)</h3>
+        <div class="t-wrap"><table><tbody>
+          <tr><td class="key">Average daytime max</td><td>~21&ndash;22&deg;C</td></tr>
+          <tr><td class="key">Average overnight min</td><td>~11&ndash;12&deg;C</td></tr>
+          <tr><td class="key">Late-June trend</td><td>Cooler &mdash; max ~20&ndash;21&deg;C, min ~8&ndash;10&deg;C</td></tr>
+          <tr><td class="key">Rainfall</td><td>~110mm over the month, ~9 rainy days</td></tr>
+          <tr><td class="key">Feel</td><td>Pleasant mild days, cold crisp nights &mdash; pack warm layers</td></tr>
+        </tbody></table></div>
+      </div>
+
+      <div class="card">
+        <h3><span class="leaf">&#127777;</span> Last 3 years &mdash; late June</h3>
+        <div class="t-wrap"><table>
+          <thead><tr><th>Year</th><th>Day max</th><th>Night min</th><th>Notes</th></tr></thead>
+          <tbody>
+            <tr><td class="key">2023</td><td>~21&deg;C</td><td>~10&deg;C</td><td>Mild days, chilly nights</td></tr>
+            <tr><td class="key">2024</td><td>~22&deg;C</td><td>~9&deg;C</td><td>A few clear, cool mornings</td></tr>
+            <tr><td class="key">2025</td><td>~20&deg;C</td><td>~8&deg;C</td><td>Slightly cooler, some misty mornings</td></tr>
+            <tr><td class="key">Expected (26&ndash;29 Jun)</td><td>~21&deg;C</td><td>~9&deg;C</td><td>What to plan for</td></tr>
+          </tbody>
+        </table></div>
+      </div>
+    </div>
+
+    <div class="note"><b>Bottom line:</b> plan for roughly 20&ndash;22&deg;C by day and as low as 7&ndash;10&deg;C overnight. Bring warm layers, a jacket for the evenings and a rain jacket just in case &mdash; see the Packing tab.</div>
+    <p class="src" style="text-align:center;margin-top:14px;">Source: BOM &mdash; Mapleton forecast</p>
+  </section>
+
+  <!-- COCKTAILS -->
+  <section class="panel" id="cocktails" role="tabpanel">
+    <div class="section-head"><span class="label">By the fire</span><h2>Winter warmer cocktails</h2></div>
+    <p class="lede">Cosy, spirit-forward drinks for cold nights on the range. Most are single-serve &mdash; see the batch notes to scale up. Mix mild, taste, then adjust.</p>
+
+    <h3 style="font-family:'Cormorant Garamond';font-style:italic;font-size:1.6rem;color:var(--terracotta-deep);text-align:center;margin:6px 0 16px;">Hot &amp; served warm</h3>
+
+    <div class="card">
+      <h3>Hot Toddy <span style="font-size:.9rem;font-weight:400;color:var(--ink-soft);">(whisky)</span></h3>
+      <p><b>You&rsquo;ll need:</b> 60ml whisky; 2 tsp honey; 15ml lemon juice; ~150ml hot water; lemon wheel, cinnamon stick, cloves.</p>
+      <p><b>Method:</b> Warm a heatproof mug with hot water, then empty. Add honey, lemon juice &amp; whisky, top with hot (not boiling) water, stir to dissolve the honey. Garnish with a clove-studded lemon wheel &amp; a cinnamon stick.</p>
+      <div class="note">The classic cold-night cure. <b>Batch:</b> warm whisky + honey + lemon gently in a pot (don&rsquo;t boil) and ladle into mugs.</div>
+    </div>
+
+    <div class="card">
+      <h3>Hot Buttered Bourbon</h3>
+      <p><b>You&rsquo;ll need:</b> 60ml bourbon; 1 tbsp &lsquo;batter&rsquo; (softened butter creamed with brown sugar + pinch cinnamon, nutmeg, clove); hot water.</p>
+      <p><b>Method:</b> Spoon the spiced butter batter into a mug, add bourbon, top with hot water and stir until the butter melts into a silky, sweet drink.</p>
+      <div class="note"><b>Batch:</b> make a tub of the butter batter ahead (butter + brown sugar + mixed spice). Everyone just spoons &amp; tops up.</div>
+    </div>
+
+    <div class="card">
+      <h3>Spiked Mexican Hot Chocolate</h3>
+      <p><b>You&rsquo;ll need:</b> 45ml reposado tequila (or bourbon); 250ml hot chocolate; pinch cinnamon &amp; chilli; whipped cream.</p>
+      <p><b>Method:</b> Make rich hot chocolate on the stove, whisk in a pinch of cinnamon and a tiny pinch of chilli. Off the heat, stir in the tequila. Top with cream and a dusting of cinnamon.</p>
+      <div class="note">Crowd favourite &amp; kid-friendly minus the booze &mdash; make a big pot of the choc, then spike the adults&rsquo; mugs individually.</div>
+    </div>
+
+    <div class="card">
+      <h3>Mulled-style Bourbon Cider</h3>
+      <p><b>You&rsquo;ll need:</b> 60ml bourbon; 200ml cloudy apple juice/cider; 1 cinnamon stick, 2 cloves, orange peel; star anise.</p>
+      <p><b>Method:</b> Gently warm the juice/cider with the spices &amp; orange peel for 10 min (don&rsquo;t boil). Pour into mugs and add a nip of bourbon to each.</p>
+      <div class="note"><b>Brilliant for a group:</b> simmer a big pot of spiced cider on the stove, ladle out and add bourbon per mug.</div>
+    </div>
+
+    <h3 style="font-family:'Cormorant Garamond';font-style:italic;font-size:1.6rem;color:var(--terracotta-deep);text-align:center;margin:24px 0 16px;">Stirred &amp; spirit-forward</h3>
+
+    <div class="card">
+      <h3>Old Fashioned <span style="font-size:.9rem;font-weight:400;color:var(--ink-soft);">(bourbon/whisky)</span></h3>
+      <p><b>You&rsquo;ll need:</b> 60ml bourbon or rye; 1 sugar cube (or 7ml sugar syrup); 2&ndash;3 dashes Angostura bitters; orange peel.</p>
+      <p><b>Method:</b> Muddle the sugar with bitters &amp; a splash of water in a glass. Add a big ice cube and the whisky, stir 20&ndash;30 sec until chilled. Express an orange peel over the top and drop it in.</p>
+      <div class="note">The benchmark winter sipper. <b>Batch:</b> mix whisky, syrup, bitters &amp; a little water in a bottle, chill, pour over ice.</div>
+    </div>
+
+    <div class="card">
+      <h3>Whisky / Bourbon Sour</h3>
+      <p><b>You&rsquo;ll need:</b> 60ml bourbon; 30ml lemon juice; 20ml sugar syrup; 1 egg white (optional); bitters.</p>
+      <p><b>Method:</b> Shake everything hard with ice (dry-shake first without ice if using egg white for foam). Strain over fresh ice. Dot bitters on the foam.</p>
+      <div class="note">Egg white optional but gives a lovely foam. Pre-mix the bourbon + lemon + syrup base by the jug, shake to order.</div>
+    </div>
+
+    <div class="card">
+      <h3>Tequila A&ntilde;ejo Old Fashioned</h3>
+      <p><b>You&rsquo;ll need:</b> 60ml a&ntilde;ejo tequila; 7ml agave syrup; 2 dashes orange (or Angostura) bitters; orange peel.</p>
+      <p><b>Method:</b> Stir tequila, agave and bitters over a large ice cube until well chilled. Express orange peel over and garnish.</p>
+      <div class="note">A warming, oaky twist on the Old Fashioned for the tequila drinkers. Use a good aged (a&ntilde;ejo) tequila.</div>
+    </div>
+
+    <div class="card">
+      <h3>Maple Whisky Sour / Manhattan-ish</h3>
+      <p><b>You&rsquo;ll need:</b> 60ml rye or bourbon; 25ml sweet vermouth (Manhattan) OR 20ml maple syrup + 25ml lemon (maple sour); bitters; cherry.</p>
+      <p><b>Method:</b> Manhattan &mdash; stir whisky, vermouth &amp; 2 dashes bitters over ice, strain into a chilled glass, cherry. Maple sour &mdash; shake whisky, maple &amp; lemon with ice, strain over fresh ice.</p>
+      <div class="note">Two easy riffs on one bottle of whisky. Maple syrup makes a lovely wintry sweetener.</div>
+    </div>
+
+    <div class="card">
+      <h3><span class="leaf">&#128221;</span> Handy notes</h3>
+      <ul class="plain">
+        <li><b>Buy:</b> a bottle each of bourbon &amp; whisky, one a&ntilde;ejo/reposado tequila, Angostura bitters, honey, maple syrup, lemons, oranges, cinnamon sticks, cloves, star anise, sweet vermouth, cloudy apple juice/cider, good drinking chocolate &amp; cream.</li>
+        <li><b>Hot drinks:</b> warm gently, never boil &mdash; boiling cooks off the alcohol and turns citrus bitter.</li>
+        <li><b>Kid-friendly:</b> the hot chocolate and spiced cider both work beautifully without the spirit &mdash; spike the adults&rsquo; mugs only.</li>
+        <li><b>Designated driver / nightcap:</b> these are strong. Keep water on the table and go easy if anyone&rsquo;s driving down the range.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- PACKING -->
+  <section class="panel" id="packing" role="tabpanel">
+    <div class="section-head"><span class="label">Don&rsquo;t forget</span><h2>Packing list</h2></div>
+    <p class="lede">Cold up on the range in June! Tick off as you pack. Good news &mdash; linen, towels, robes &amp; slippers are supplied at Woody Grove.</p>
+
+    <div class="card">
+      <ul class="check">
+        <li><label><input type="checkbox"><span>Warm clothes, jumpers, jackets &amp; PJs (range nights are several degrees colder)</span></label></li>
+        <li><label><input type="checkbox"><span>Rain jacket / umbrella (hinterland mornings are often misty)</span></label></li>
+        <li><label><input type="checkbox"><span>Good walking shoes (loads of trails) + spare socks</span></label></li>
+        <li><label><input type="checkbox"><span>Swimmers &amp; a towel for the POOL (and maybe Baroon Pocket Dam / rock pools)</span></label></li>
+        <li><label><input type="checkbox"><span>Sun hat, sunscreen &amp; insect repellent</span></label></li>
+        <li><label><input type="checkbox"><span>Toiletries (shampoo, soap, toothbrush/paste) &mdash; robes &amp; slippers are provided</span></label></li>
+        <li><label><input type="checkbox"><span>First aid kit (incl. tweezers + tea tree oil for ticks)</span></label></li>
+        <li><label><input type="checkbox"><span>Phone chargers &amp; a power bank</span></label></li>
+        <li><label><input type="checkbox"><span>Camera</span></label></li>
+        <li><label><input type="checkbox"><span>Torch / head torch (gets dark, good for spotting wildlife)</span></label></li>
+        <li><label><input type="checkbox"><span>Board games &amp; cards for the adults; toys/colouring for the kids</span></label></li>
+        <li><label><input type="checkbox"><span>Books / something to read</span></label></li>
+        <li><label><input type="checkbox"><span>Eskies for drinks (fridge space may be limited with a big group)</span></label></li>
+        <li><label><input type="checkbox"><span>Reusable water bottles &amp; day packs for walks</span></label></li>
+        <li><label><input type="checkbox"><span>Pre-prepped meals / containers (see Meals tab)</span></label></li>
+        <li><label><input type="checkbox"><span>Cash for Eumundi Markets &amp; roadside produce stalls</span></label></li>
+        <li><label><input type="checkbox"><span>Any medications + the kids&rsquo; comfort items</span></label></li>
+      </ul>
+      <div class="note">Ticks reset if the page reloads &mdash; this list is a quick visual aid, not a saved checklist.</div>
+    </div>
+  </section>
+
+  <!-- AMENITIES -->
+  <section class="panel" id="amenities" role="tabpanel">
+    <div class="section-head"><span class="label">Local logistics</span><h2>Amenities &mdash; Mapleton</h2></div>
+
+    <div class="grid2">
+      <div class="card">
+        <h3><span class="leaf">&#9989;</span> The good news</h3>
+        <ul class="plain">
+          <li><b>Mapleton IGA</b> (28 Flaxton Dr) &mdash; open 6am to 7pm <b>every day</b>, with fuel, deli &amp; coffee bar</li>
+          <li>Cafes &amp; the Mapleton Public House in the village for meals out</li>
+          <li>Montville (20 min) &amp; Maleny (35 min) for more shops, cafes &amp; supplies</li>
+          <li>Fuel available in town at the IGA</li>
+          <li>Nambour (25 min) for a full shopping centre / chemist / anything bigger</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h3><span class="leaf">&#128230;</span> Worth checking / bring from home</h3>
+        <ul class="plain">
+          <li>Wi-Fi is provided at the house, but mobile reception can be patchy on the range &mdash; download maps/offline entertainment for the kids just in case</li>
+          <li>Specialty / large grocery shops are down in Nambour (~25 min), not in the village</li>
+          <li>Book ahead for the Mapleton Public House and any zoo/attraction tickets on weekends</li>
+          <li>Return the gate openers on checkout (before 11am Monday)</li>
+          <li>Confirm the children policy with the host before booking &mdash; the listing notes it&rsquo;s &lsquo;not suitable for children/infants&rsquo;</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<footer class="foot">
+  <p class="fh">Warm Hearts, Warmer Hearths</p>
+  <p class="fs">Long nights, full mugs &amp; the people we love best.</p>
+</footer>
+
+<script>
+  /* ============================================================
+     PASTE YOUR SHARED GOOGLE SHEET LINK BETWEEN THE QUOTES BELOW.
+     (Get it from the Sheet via Share -> Copy link.)
+     ============================================================ */
+  var PLANNER_URL = "https://docs.google.com/spreadsheets/d/1OyckwNFQWBazKkyVts5M3EjmpKEd4a5U/edit?usp=drive_link&ouid=104492028062503347903&rtpof=true&sd=true";
+
+  /* ============================================================
+     LIVE SHEET EMBEDS
+     Paste the "Publish to the web" link for each tab between the
+     quotes (the URL inside src="..." that Google gives you on the
+     Embed tab). Leave a value blank to hide that window.
+       crew      -> the tab with the family/crew names
+       groceries -> the Groceries tab
+       meals     -> the Meals tab (meal claims + dietary)
+     ============================================================ */
+  var SHEET_EMBEDS = {
+    crew:      "",
+    groceries: "",
+    meals:     "https://docs.google.com/spreadsheets/d/e/2PACX-1vRQPegZcUtlAvg3zSpOW9Z_xC79OmJTofQvLLwN65H3Dmhs-Vanp4Xj2gbbFv_0oA/pubhtml?gid=1062045680&single=true"
+  };
+
+  (function(){
+    document.querySelectorAll('.sheet-embed').forEach(function(box){
+      var url = SHEET_EMBEDS[box.getAttribute('data-embed')];
+      var frame = box.querySelector('.se-frame');
+      if(url && url.indexOf('http') === 0){
+        var ifr = document.createElement('iframe');
+        ifr.className = 'se-iframe';
+        ifr.src = url;
+        ifr.setAttribute('loading','lazy');
+        frame.appendChild(ifr);
+      } else {
+        frame.innerHTML = '<div class="se-placeholder">Not connected yet \u2014 once you <b>Publish to the web</b> for this tab, paste its link into <b>SHEET_EMBEDS</b> near the bottom of this file. Until then, use the button above to open the planner.</div>';
+      }
+    });
+  })();
+
+  (function(){
+    var ready = PLANNER_URL && PLANNER_URL.indexOf("REPLACE_WITH") === -1;
+    var links = document.querySelectorAll('.planner-btn, .planner-btn-link');
+    links.forEach(function(b){
+      if(ready){
+        b.setAttribute('href', PLANNER_URL);
+      } else {
+        if(b.classList.contains('planner-btn')) b.classList.add('planner-off');
+        b.setAttribute('title', 'Add your shared-planner link near the top of this file (PLANNER_URL).');
+        b.addEventListener('click', function(e){
+          e.preventDefault();
+          alert('Almost there! Open this HTML file and paste your shared Google Sheet link near the top, where it says PLANNER_URL.');
+        });
+      }
+    });
+  })();
+
+  (function(){
+    var tabs = Array.prototype.slice.call(document.querySelectorAll('.tab'));
+    var panels = document.querySelectorAll('.panel');
+    function activate(name, focusTab){
+      tabs.forEach(function(t){
+        var on = t.getAttribute('data-panel') === name;
+        t.setAttribute('aria-selected', on ? 'true' : 'false');
+        if(on && focusTab) t.focus();
+      });
+      panels.forEach(function(p){ p.classList.toggle('active', p.id === name); });
+      window.scrollTo({top:0, behavior:'smooth'});
+    }
+    tabs.forEach(function(tab, i){
+      tab.addEventListener('click', function(){ activate(tab.getAttribute('data-panel'), false); });
+      tab.addEventListener('keydown', function(e){
+        if(e.key === 'ArrowRight' || e.key === 'ArrowLeft'){
+          e.preventDefault();
+          var dir = e.key === 'ArrowRight' ? 1 : -1;
+          var next = (i + dir + tabs.length) % tabs.length;
+          activate(tabs[next].getAttribute('data-panel'), true);
+        }
+      });
+    });
+  })();
+</script>
+
+</body>
+</html>
